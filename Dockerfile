@@ -19,15 +19,15 @@ ARG EZA_VERSION=0.23.4
 ARG DELTA_VERSION=0.18.2
 ARG ZOXIDE_VERSION=0.9.9
 ARG DUF_VERSION=0.9.1
-ARG BEADS_VERSION=0.55.4
+ARG BEADS_VERSION=0.57.0
 ARG MIHOMO_VERSION=1.19.20
-ARG BUN_VERSION=1.3.9
-ARG UV_VERSION=0.10.4
+ARG BUN_VERSION=1.3.10
+ARG UV_VERSION=0.10.7
 ARG STARSHIP_VERSION=1.24.2
-ARG PROCS_VERSION=0.14.10
+ARG PROCS_VERSION=0.14.11
 ARG ZELLIJ_VERSION=0.43.1
 ARG OPENVSCODE_VERSION=1.109.5
-ARG JDTLS_VERSION=1.56.0-202601291528
+ARG JDTLS_VERSION=1.57.0-202602261110
 
 LABEL maintainer="buntoolbox"
 LABEL description="Multi-language development environment with Bun, Node.js, Python, and Java"
@@ -62,10 +62,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ninja-build \
     # Utilities
     jq \
+    gawk \
     htop \
     tree \
     zip \
     unzip \
+    xz-utils \
     less \
     tmux \
     direnv \
@@ -177,6 +179,11 @@ ENV HELIX_RUNTIME=/opt/helix-${HELIX_VERSION}-x86_64-linux/runtime
 RUN curl -fsSL "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz" \
     | tar -xz -C /usr/local/bin
 
+# ble.sh (Bash Line Editor - syntax highlighting & auto-complete)
+RUN curl -fsSL "https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly.tar.xz" \
+    | tar -xJ \
+    && bash ble-nightly/ble.sh --install /root/.local/share \
+    && rm -rf ble-nightly
 # procs (ps replacement)
 RUN curl -fsSL "https://github.com/dalance/procs/releases/download/v${PROCS_VERSION}/procs-v${PROCS_VERSION}-x86_64-linux.zip" \
     -o /tmp/procs.zip \
@@ -276,7 +283,8 @@ RUN echo 'eval "$(direnv hook bash)"' > /etc/profile.d/01-direnv.sh \
     && echo 'alias ls="eza"' > /etc/profile.d/04-aliases.sh \
     && echo 'alias ll="eza -l"' >> /etc/profile.d/04-aliases.sh \
     && echo 'alias la="eza -la"' >> /etc/profile.d/04-aliases.sh \
-    && echo 'alias cat="bat --paging=never"' >> /etc/profile.d/04-aliases.sh
+    && echo 'alias cat="bat --paging=never"' >> /etc/profile.d/04-aliases.sh \
+    && echo 'source -- /root/.local/share/blesh/ble.sh' >> /root/.bashrc
 
 RUN git lfs install \
     && rm -rf /usr/share/doc/* /usr/share/man/* \

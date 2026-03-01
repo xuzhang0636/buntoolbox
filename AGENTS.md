@@ -41,7 +41,7 @@ buntoolbox/
 - ❌ **本地构建镜像**: 禁止在本地执行耗时、消耗流量的 `docker build`。让 GitHub Actions 去做。
 
 ## UNIQUE STYLES
-- **TUI 优先环境**: 环境深度集成诸多现代终端工具（zellij, lazygit, helix, eza, delta, btop, procs），鼓励全程键盘操作。
+- **TUI 优先环境**: 环境深度集成诸多现代终端工具（zellij, lazygit, helix, eza, delta, btop, procs, ble.sh, gawk），鼓励全程键盘操作。
 - **全平台 VS Code 接入**: 预置 `openvscode-start.sh`，默认映射 3000 端口提供无验证、浏览器内的完整 VS Code 体验。
 - **特定工具检测绕过**: `bd` 没有数据库时 `--version` 会异常退出（请用 `--help`），`mihomo` 无版检参数（请用 `-v`），`jdtls` 依靠 jar 文件名而非命令。
 
@@ -58,6 +58,43 @@ buntoolbox/
 bd update bd-42 --status in_progress --json
 bd close bd-42 --reason "Done" --json
 ```
+
+## WORKFLOW: 新增工具 / 版本升级（标准流程）
+
+当需要在镜像里新增工具，或升级已有工具版本时，统一按以下顺序执行：
+
+1. **先在本机（WSL）安装并验证**
+   - 先在当前开发机安装目标工具（优先官方推荐安装方式，避免不必要源码编译）。
+   - 验证核心命令可用、版本可读、基本功能正常。
+
+2. **确认来源与安装策略**
+   - 确认工具来源（apt / 官方 release / 其他官方渠道）。
+   - 如需版本锁定，在 `Dockerfile` 顶部 `ARG` 统一声明版本。
+
+3. **落地到 Dockerfile**
+   - 按构建分层原则放置到合适层（稳定层在前，高频更新层在后）。
+   - 安装与清理放在同一 `RUN` 中，避免镜像层膨胀。
+   - 如需 shell 自动加载（如 ble.sh），在最终配置区写入对应 profile/bashrc 初始化。
+
+4. **同步更新脚本（必须）**
+   - `scripts/check-versions.sh`：支持新工具/新版本对齐检查。
+   - `scripts/check-wsl-versions.sh`：支持本机环境同源检查。
+   - `scripts/test-image.sh`：新增或更新该工具的镜像内验证项。
+
+5. **同步更新文档与元信息（必须）**
+   - `README.md`（用户可见工具清单）
+   - `image-release.txt`（镜像内元信息）
+   - `AGENTS.md`（流程/约定变化时）
+
+6. **执行验证**
+   - 脚本语法：`bash -n scripts/*.sh`（至少覆盖改动脚本）。
+   - 版本检查：`./scripts/check-versions.sh`、`./scripts/check-wsl-versions.sh`。
+   - 镜像验证：`./scripts/test-image.sh`。
+   - 说明：若远端 `latest` 尚未由 CI 重建，`test-image.sh` 可能出现预期版本差异，属正常现象。
+
+7. **CI 收口**
+   - 推送后等待 GitHub Actions 构建并发布新镜像。
+   - CI 完成后再次执行 `./scripts/test-image.sh`，确保版本与功能检查全绿。
 
 ## NOTES
 - **jdtls 安装约定**: 版本含有时间戳 (`1.56.0-202601291528`)。完整解压在 `~/.local/share/jdtls`，依靠 `~/jdtls` 的软连接暴露环境。
