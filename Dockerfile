@@ -324,7 +324,8 @@ RUN git clone https://github.com/LazyVim/starter /root/.config/nvim \
     && mkdir -p /root/.config/nvim/lua/plugins \
     && echo 'return { { import = "lazyvim.plugins.extras.lang.java" } }' > /root/.config/nvim/lua/plugins/java.lua \
     && nvim --headless "+Lazy! sync" +qa \
-    && rm -rf /root/.cache/nvim/lazy/readme
+    && rm -rf /root/.cache/nvim/lazy/readme \
+    && cp -r /root/.config/nvim /root/nvim-config
 
 RUN git lfs install \
     && rm -rf /usr/share/doc/* /usr/share/man/* \
