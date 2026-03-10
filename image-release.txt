@@ -35,6 +35,7 @@
 - vim
 - nano
 - helix (hx)
+- nvim (neovim)
 - openvscode-server (VS Code in browser)
 - ttyd (web terminal)
 

@@ -29,6 +29,7 @@ ARG ZELLIJ_VERSION=0.43.1
 ARG OPENVSCODE_VERSION=1.109.5
 ARG JDTLS_VERSION=1.57.0-202602261110
 ARG TTYD_VERSION=1.7.7
+ARG NVIM_VERSION=0.11.6
 
 LABEL maintainer="buntoolbox"
 LABEL description="Multi-language development environment with Bun, Node.js, Python, and Java"
@@ -174,6 +175,11 @@ RUN curl -fsSL "https://github.com/helix-editor/helix/releases/download/${HELIX_
     | tar -xJ -C /opt \
     && ln -sf /opt/helix-${HELIX_VERSION}-x86_64-linux/hx /usr/local/bin/hx
 ENV HELIX_RUNTIME=/opt/helix-${HELIX_VERSION}-x86_64-linux/runtime
+
+# nvim (neovim)
+RUN curl -fsSL "https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux-x86_64.tar.gz" \
+    | tar -xz -C /opt \
+    && ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
 
 # starship prompt
 RUN curl -fsSL "https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-x86_64-unknown-linux-gnu.tar.gz" \

@@ -169,6 +169,9 @@ get_local_version() {
         hx)
             hx --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'
             ;;
+        nvim)
+            nvim --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'
+            ;;
         eza)
             eza --version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | sed 's/^v//'
             ;;
@@ -301,6 +304,7 @@ echo ""
 echo "=== TUI 工具 ==="
 check_tool "lazygit" "lazygit" "$(get_latest_github_release jesseduffield/lazygit)"
 check_tool "helix" "hx" "$(get_latest_github_release helix-editor/helix)"
+check_tool "nvim" "nvim" "$(get_latest_github_release neovim/neovim)"
 check_tool "eza" "eza" "$(get_latest_github_release eza-community/eza)"
 check_tool "delta" "delta" "$(get_latest_github_release dandavison/delta)"
 check_tool "procs" "procs" "$(get_latest_github_release dalance/procs)"
