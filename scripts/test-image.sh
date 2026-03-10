@@ -332,6 +332,7 @@ check "vim" "vim --version | grep -oE 'Vi IMproved [0-9.]+' | grep -oE '[0-9.]+'
 check "nano" "nano --version | grep -oE '[0-9.]+' | head -1" "nano --version" "nano" "Verify installation"
 check_ver "helix" "hx --version | grep -oE '[0-9.]+' | head -1" "hx --health 2>&1 | head -1" "Config" "Health check" "EXPECT_HELIX_VERSION"
 check_ver "nvim" "nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'" "nvim --version" "NVIM" "Verify installation" "EXPECT_NVIM_VERSION"
+check "lazyvim" "ls /root/.config/nvim/lua/config/lazy.lua 2>/dev/null && echo installed" "ls /root/.local/share/nvim/lazy/LazyVim/lua/lazyvim/init.lua 2>/dev/null && echo ok" "ok" "LazyVim plugins installed"
 check_ver "openvscode-server" "openvscode-server --version | head -1" "openvscode-server --help 2>&1 | head -1" "OpenVSCode Server" "Show help" "EXPECT_OPENVSCODE_VERSION"
 check_ver "ttyd" "ttyd --version | grep -oE '[0-9.]+' | head -1" "ttyd --version" "ttyd" "Verify installation" "EXPECT_TTYD_VERSION"
 

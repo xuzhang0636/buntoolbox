@@ -317,6 +317,13 @@ alias la="eza -la"
 alias cat="bat --paging=never"
 ZSHRC
 
+
+# LazyVim (nvim distribution - modern IDE experience out of the box)
+RUN git clone https://github.com/LazyVim/starter /root/.config/nvim \
+    && rm -rf /root/.config/nvim/.git \
+    && nvim --headless "+Lazy! sync" +qa \
+    && rm -rf /root/.cache/nvim/lazy/readme
+
 RUN git lfs install \
     && rm -rf /usr/share/doc/* /usr/share/man/* \
     /root/.launchpadlib
