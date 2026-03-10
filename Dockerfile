@@ -321,6 +321,8 @@ ZSHRC
 # LazyVim (nvim distribution - modern IDE experience out of the box)
 RUN git clone https://github.com/LazyVim/starter /root/.config/nvim \
     && rm -rf /root/.config/nvim/.git \
+    && mkdir -p /root/.config/nvim/lua/plugins \
+    && echo 'return { { import = "lazyvim.plugins.extras.lang.java" } }' > /root/.config/nvim/lua/plugins/java.lua \
     && nvim --headless "+Lazy! sync" +qa \
     && rm -rf /root/.cache/nvim/lazy/readme
 
